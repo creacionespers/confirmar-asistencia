@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Asistencia</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9f7f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      max-width: 420px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333333;
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label.question {
+      display: block;
+      font-weight: 600;
+      color: #444444;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .radio-option {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      color: #555;
+      user-select: none;
+    }
+
+    .radio-option:hover {
+      border-color: #25D366;
+    }
+
+    input[type="radio"] {
+      accent-color: #25D366;
+      transform: scale(1.15);
+      cursor: pointer;
+    }
+
+    .bloque-condicional {
+      display: none;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #e0e0e0;
+    }
+
+    .bloque-condicional.visible {
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: #25D366;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #1ebe5d;
+    }
+
+    .aviso-error {
+      color: #c62828;
+      font-size: 0.88rem;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .enlace-respaldo {
+      display: none;
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .enlace-respaldo a {
+      color: #128c7e;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Confirmar Asistencia</h2>
+    <form id="rsvpForm" novalidate>
+
+      <!-- Pregunta 1: Confirmas asistencia -->
+      <div class="form-group">
+        <label class="question">¿Confirmás asistencia?</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" id="asisteSi" name="asistencia" value="Sí"> Sí
+          </label>
+          <label class="radio-option">
+            <input type="radio" id="asisteNo" name="asistencia" value="No"> No
+          </label>
+        </div>
+      </div>
+
+      <!-- Si marca SÍ: Nombre y Apellido, DNI y Servicio de micro -->
+      <div id="bloque-si" class="bloque-condicional">
+        <div class="form-group">
+          <label class="question" for="nombreCompleto">Nombre y Apellido</label>
+          <input type="text" id="nombreCompleto" placeholder="Ej: Juan Pérez">
+        </div>
+
+        <div class="form-group">
+          <label class="question" for="dni">DNI (sin puntos)</label>
+          <input type="number" id="dni" placeholder="Ej: 35123456">
+        </div>
+
+        <div class="form-group">
+          <label class="question">¿Usarás el servicio de micro?</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" id="microSi" name="micro" value="Sí"> Sí
+            </label>
+            <label class="radio-option">
+              <input type="radio" id="microNo" name="micro" value="No"> No
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Si marca NO: Solo su nombre -->
+      <div id="bloque-no" class="bloque-condicional">
+        <div class="form-group">
+          <label class="question" for="soloNombre">Tu nombre</label>
+          <input type="text" id="soloNombre" placeholder="Ej: Juan">
+        </div>
+      </div>
+
+      <div id="mensajeError" class="aviso-error"></div>
+
+      <button type="submit">Enviar respuesta por WhatsApp</button>
+
+      <div id="enlaceRespaldo" class="enlace-respaldo">
+        ¿No se abrió WhatsApp? <a id="linkWaDirecto" href="#" target="_blank" rel="noopener noreferrer">Tocá acá para abrirlo</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const telefonoDestino = "5492216786621";
+
+    const asisteSi = document.getElementById("asisteSi");
+    const asisteNo = document.getElementById("asisteNo");
+    const bloqueSi = document.getElementById("bloque-si");
+    const bloqueNo = document.getElementById("bloque-no");
+    const nombreCompleto = document.getElementById("nombreCompleto");
+    const dni = document.getElementById("dni");
+    const soloNombre = document.getElementById("soloNombre");
+    const mensajeError = document.getElementById("mensajeError");
+    const enlaceRespaldo = document.getElementById("enlaceRespaldo");
+    const linkWaDirecto = document.getElementById("linkWaDirecto");
+
+    function mostrarError(texto) {
+      mensajeError.textContent = texto;
+      mensajeError.style.display = "block";
+    }
+
+    function ocultarError() {
+      mensajeError.textContent = "";
+      mensajeError.style.display = "none";
+    }
+
+    function actualizarVista() {
+      ocultarError();
+      enlaceRespaldo.style.display = "none";
+
+      if (asisteSi.checked) {
+        bloqueSi.classList.add("visible");
+        bloqueNo.classList.remove("visible");
+      } else if (asisteNo.checked) {
+        bloqueNo.classList.add("visible");
+        bloqueSi.classList.remove("visible");
+      } else {
+        bloqueSi.classList.remove("visible");
+        bloqueNo.classList.remove("visible");
+      }
+    }
+
+    asisteSi.addEventListener("change", actualizarVista);
+    asisteNo.addEventListener("change", actualizarVista);
+
+    document.getElementById("rsvpForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      ocultarError();
+
+      const asistenciaMarcada = document.querySelector('input[name="asistencia"]:checked');
+      if (!asistenciaMarcada) {
+        mostrarError("Por favor, seleccioná si confirmás asistencia (Sí o No).");
+        return;
+      }
+
+      const asistencia = asistenciaMarcada.value;
+      let mensaje = "";
+
+      if (asistencia === "Sí") {
+        const nombre = nombreCompleto.value.trim();
+        const dniValor = dni.value.trim();
+        const microMarcado = document.querySelector('input[name="micro"]:checked');
+
+        if (!nombre) {
+          mostrarError("Por favor, ingresá tu Nombre y Apellido.");
+          return;
+        }
+        if (!dniValor) {
+          mostrarError("Por favor, ingresá tu DNI.");
+          return;
+        }
+        if (!microMarcado) {
+          mostrarError("Por favor, indicá si usarás el servicio de micro.");
+          return;
+        }
+
+        mensaje =
+          "¡Hola! Confirmo mi asistencia al evento.\n\n" +
+          "✅ *Asistencia:* Sí\n" +
+          "👤 *Nombre y Apellido:* " + nombre + "\n" +
+          "🪪 *DNI:* " + dniValor + "\n" +
+          "🚌 *Servicio de micro:* " + microMarcado.value;
+      } else {
+        const nombreNo = soloNombre.value.trim();
+
+        if (!nombreNo) {
+          mostrarError("Por favor, ingresá tu nombre.");
+          return;
+        }
+
+        mensaje =
+          "¡Hola! Soy " + nombreNo + " y te aviso que lamentablemente no podré asistir al evento.\n\n" +
+          "❌ *Asistencia:* No\n" +
+          "👤 *Nombre:* " + nombreNo;
+      }
+
+      const urlWhatsApp = "https://wa.me/" + telefonoDestino + "?text=" + encodeURIComponent(mensaje);
+
+      linkWaDirecto.href = urlWhatsApp;
+      enlaceRespaldo.style.display = "block";
+
+      window.location.href = urlWhatsApp;
+    });
+  </script>
+
+</body>
+</html>
